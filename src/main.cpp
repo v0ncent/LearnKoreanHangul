@@ -4,10 +4,10 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-int main() {
+GLFWwindow* init() {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
-        return -1;
+        return nullptr;
     }
 
     GLFWwindow* window = glfwCreateWindow(800, 600, "LearnKoreanHangul", nullptr, nullptr);
@@ -15,7 +15,7 @@ int main() {
     if (!window) {
         std::cerr << "Failed to open GLFW window" << std::endl;
         glfwTerminate();
-        return -1;
+        return nullptr;
     }
 
     glfwMakeContextCurrent(window);
@@ -30,17 +30,32 @@ int main() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
 
+    return window;
+}
+
+void buildWindowContent() {
+    ImGui::Begin("Hello, world!");
+    ImGui::Text("This is a simple ImGui + OpenGL + GLFW setup.");
+    ImGui::End();
+}
+
+int main() {
+    GLFWwindow* window = init();
+
+    if (window == nullptr) {
+        std::cerr << "Failed to initialize GLFW Window!" << std::endl;
+        return -1;
+    }
+
+    // run window loop
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("Hello, world!");
-        ImGui::Text("This is a simple ImGui + OpenGL + GLFW setup.");
-        ImGui::End();
+        buildWindowContent();
 
         ImGui::Render();
 
@@ -54,6 +69,7 @@ int main() {
         glfwSwapBuffers(window);
     }
 
+    // clean up on close
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
