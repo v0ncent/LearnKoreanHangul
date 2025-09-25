@@ -1,8 +1,6 @@
 #include "Painter.h"
 
 #include <imgui.h>
-#include <iostream>
-#include <filesystem>
 
 #include "GLFW/glfw3.h"
 
@@ -17,7 +15,6 @@ void Painter::shouldShowBackToMenu(const bool show) {
 void Painter::shouldPaintGame(const bool paint) {
     showGame = paint;
 }
-
 
 void Painter::paintBackToMenu(bool *open) {
     const ImGuiViewport* viewPort = ImGui::GetMainViewport();
@@ -90,24 +87,8 @@ void Painter::paintMainMenu(bool* open) {
     ImGui::End();
 }
 
-
-std::ostream& operator<<(std::ostream& os, const Util::ImageData& img) {
-    os << "Image("
-       << img.path << ", "
-       << img.width << "x" << img.height
-       << ", channels=" << img.channels << ")";
-    return os;
-}
-
 void Painter::paintGame(bool *open) {
-    std::filesystem::path projectRoot = std::filesystem::current_path().parent_path();
-    auto hangulPath = projectRoot / "hangul";
 
-    hangulImages = Util::load_images(hangulPath.string());
-
-    for (const auto& imageData : hangulImages) {
-        std::cout << imageData << std::endl;
-    }
 }
 
 

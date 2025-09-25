@@ -9,7 +9,7 @@ std::vector<Util::ImageData> Util::load_images(const std::string &path) {
     std::vector<ImageData> images;
 
     for (const auto& entry : std::filesystem::__cxx11::directory_iterator(path)) {
-        if (entry.is_regular_file() && entry.path().extension() == ".png") {
+        if (entry.is_regular_file() && entry.path().extension() == ".PNG") {
             const std::string filePath = entry.path().string();
 
             int w, h, ch;

@@ -3,6 +3,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <filesystem>
 
 #include "Painter.h"
 
@@ -49,6 +50,12 @@ int main() {
     }
 
     Painter::shouldShowMenu(true);
+
+    // load hangul images
+    const std::filesystem::path projectRoot = std::filesystem::current_path().parent_path();
+    const auto hangulPath = projectRoot / "hangul";
+
+    Painter::hangulImages = Util::load_images(hangulPath.string());
 
     // run window loop
     while (!glfwWindowShouldClose(window)) {
