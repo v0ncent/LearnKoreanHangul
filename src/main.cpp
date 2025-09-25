@@ -53,8 +53,6 @@ int main() {
 
     Painter::hangulImages = Util::load_images(hangulPath.string());
 
-    bool red = false;
-
     // run window loop
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
