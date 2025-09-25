@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 
-
 class Util {
     public:
         struct ImageData {

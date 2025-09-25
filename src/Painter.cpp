@@ -67,7 +67,7 @@ void Painter::paintMainMenu(bool* open) {
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.3f, 0.5f, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
 
-    ImGui::Text("Learn Korean Hangul!");
+    ImGui::Text("Lets Learn Korean Hangul!");
     ImGui::Separator();
 
     if (ImGui::Button("Begin", ImVec2(200, 40))) {
