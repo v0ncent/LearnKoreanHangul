@@ -3,4 +3,4 @@ project(LearnKoreanHangul)
 
 set(CMAKE_CXX_STANDARD 26)
 
-add_executable(LearnKoreanHangul main.cpp)
+add_executable(LearnKoreanHangul src/main.cpp)
