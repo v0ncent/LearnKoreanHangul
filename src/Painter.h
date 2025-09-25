@@ -4,8 +4,16 @@
 class Painter {
     public:
         static inline bool showMenu = false;
+        static inline bool showBackToMenu = false;
+        static inline bool showGame = false;
+
         static void paintMainMenu(bool* open);
+        static void paintBackToMenu(bool* open);
+        static void paintGame(bool* open);
+
         static void shouldShowMenu(bool show);
+        static void shouldShowBackToMenu(bool show);
+        static void shouldPaintGame(bool paint);
 };
 
 #endif //PAINTER_H

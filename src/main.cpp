@@ -62,6 +62,14 @@ int main() {
             Painter::paintMainMenu(&Painter::showMenu);
         }
 
+        if (Painter::showBackToMenu) {
+            Painter::paintBackToMenu(&Painter::showBackToMenu);
+        }
+
+        if (Painter::showGame) {
+            Painter::paintGame(&Painter::showGame);
+        }
+
         ImGui::Render();
 
         int displayWidth, displayHeight;

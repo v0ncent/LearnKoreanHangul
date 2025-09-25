@@ -8,6 +8,40 @@ void Painter::shouldShowMenu(const bool show) {
     showMenu = show;
 }
 
+void Painter::shouldShowBackToMenu(const bool show) {
+    showBackToMenu = show;
+}
+
+void Painter::shouldPaintGame(bool paint) {
+    showGame = paint;
+}
+
+
+void Painter::paintBackToMenu(bool *open) {
+    const ImGuiViewport* viewPort = ImGui::GetMainViewport();
+
+    ImVec2 workPosistion = viewPort -> WorkPos;
+    ImVec2 workSize = viewPort -> WorkSize;
+
+    constexpr ImVec2 buttonSize = ImVec2(100, 400);
+    ImGui::SetNextWindowPos(ImVec2(workPosistion.x + workSize.x - buttonSize.x - 10, workPosistion.y + 10));
+    ImGui::SetNextWindowSize(buttonSize);
+
+    constexpr ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove |
+                         ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground;
+
+    ImGui::Begin("BackToMenu", open, flags);
+
+    if (ImGui::Button("Back To Menu", buttonSize)) {
+        shouldPaintGame(false);
+        shouldShowBackToMenu(false);
+        shouldShowMenu(true);
+    }
+
+    ImGui::End();
+}
+
+
 void Painter::paintMainMenu(bool* open) {
     const ImGuiViewport* viewPort = ImGui::GetMainViewport();
 
@@ -39,6 +73,8 @@ void Painter::paintMainMenu(bool* open) {
 
     if (ImGui::Button("Begin", ImVec2(200, 40))) {
         shouldShowMenu(false);
+        shouldShowBackToMenu(true);
+        shouldPaintGame(true);
     }
 
     if (ImGui::Button("Quit", ImVec2(200, 40))) {
@@ -48,6 +84,12 @@ void Painter::paintMainMenu(bool* open) {
     // Restore styles
     ImGui::PopStyleColor(4);
     ImGui::PopStyleVar(2);
+
     ImGui::End();
 }
+
+void Painter::paintGame(bool *open) {
+
+}
+
 
