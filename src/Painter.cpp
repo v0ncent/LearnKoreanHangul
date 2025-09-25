@@ -1,0 +1,53 @@
+#include "Painter.h"
+
+#include <imgui.h>
+
+#include "GLFW/glfw3.h"
+
+void Painter::shouldShowMenu(const bool show) {
+    showMenu = show;
+}
+
+void Painter::paintMainMenu(bool* open) {
+    const ImGuiViewport* viewPort = ImGui::GetMainViewport();
+
+    const ImVec2 center = viewPort -> GetCenter();
+    constexpr ImVec2 size = ImVec2(300, 200);
+
+    ImGui::SetNextWindowPos(center, ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowSize(size);
+
+    // Window flags: no title bar, no resizing, no move, no collapse
+    constexpr ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+                                       ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
+                                       ImGuiWindowFlags_NoBackground; // removes default imgui window background
+
+    ImGui::Begin("Main Menu", open, flags);
+
+    // font scaling and spacing
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(20, 10));
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 20));
+
+    // Custom colors
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.4f, 0.7f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.6f, 1.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.3f, 0.5f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
+
+    ImGui::Text("Learn Korean Hangul!");
+    ImGui::Separator();
+
+    if (ImGui::Button("Begin", ImVec2(200, 40))) {
+        shouldShowMenu(false);
+    }
+
+    if (ImGui::Button("Quit", ImVec2(200, 40))) {
+        glfwSetWindowShouldClose(glfwGetCurrentContext(), true);
+    }
+
+    // Restore styles
+    ImGui::PopStyleColor(4);
+    ImGui::PopStyleVar(2);
+    ImGui::End();
+}
+

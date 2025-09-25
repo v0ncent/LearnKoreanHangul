@@ -4,13 +4,20 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#include "Painter.h"
+
+#define WINDOW_HEIGHT 1200
+#define WINDOW_WIDTH 1200
+
+#define WINDOW_TITLE "Learn Korean Hangul!"
+
 GLFWwindow* init() {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         return nullptr;
     }
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "LearnKoreanHangul", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, nullptr, nullptr);
 
     if (!window) {
         std::cerr << "Failed to open GLFW window" << std::endl;
@@ -33,12 +40,6 @@ GLFWwindow* init() {
     return window;
 }
 
-void buildWindowContent() {
-    ImGui::Begin("Hello, world!");
-    ImGui::Text("This is a simple ImGui + OpenGL + GLFW setup.");
-    ImGui::End();
-}
-
 int main() {
     GLFWwindow* window = init();
 
@@ -46,6 +47,8 @@ int main() {
         std::cerr << "Failed to initialize GLFW Window!" << std::endl;
         return -1;
     }
+
+    Painter::shouldShowMenu(true);
 
     // run window loop
     while (!glfwWindowShouldClose(window)) {
@@ -55,15 +58,19 @@ int main() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        buildWindowContent();
+        if (Painter::showMenu) {
+            Painter::paintMainMenu(&Painter::showMenu);
+        }
 
         ImGui::Render();
 
         int displayWidth, displayHeight;
         glfwGetFramebufferSize(window, &displayWidth, &displayHeight);
         glViewport(0, 0, displayWidth, displayHeight);
+
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);

@@ -25,7 +25,9 @@ target_include_directories(imgui PUBLIC
 target_link_libraries(imgui PUBLIC glfw)
 
 # Main executable
-add_executable(LearnKoreanHangul src/Main.cpp)
+add_executable(LearnKoreanHangul src/Main.cpp
+        src/Painter.cpp
+        src/Painter.h)
 
 # Link against GLFW, OpenGL, and ImGui
 target_link_libraries(LearnKoreanHangul PRIVATE
