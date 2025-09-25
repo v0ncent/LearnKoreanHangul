@@ -1,6 +1,8 @@
 #include "Painter.h"
 
 #include <imgui.h>
+#include <iostream>
+#include <filesystem>
 
 #include "GLFW/glfw3.h"
 
@@ -12,7 +14,7 @@ void Painter::shouldShowBackToMenu(const bool show) {
     showBackToMenu = show;
 }
 
-void Painter::shouldPaintGame(bool paint) {
+void Painter::shouldPaintGame(const bool paint) {
     showGame = paint;
 }
 
@@ -23,7 +25,7 @@ void Painter::paintBackToMenu(bool *open) {
     ImVec2 workPosistion = viewPort -> WorkPos;
     ImVec2 workSize = viewPort -> WorkSize;
 
-    constexpr ImVec2 buttonSize = ImVec2(100, 400);
+    constexpr ImVec2 buttonSize = ImVec2(120, 100);
     ImGui::SetNextWindowPos(ImVec2(workPosistion.x + workSize.x - buttonSize.x - 10, workPosistion.y + 10));
     ImGui::SetNextWindowSize(buttonSize);
 
@@ -88,8 +90,24 @@ void Painter::paintMainMenu(bool* open) {
     ImGui::End();
 }
 
-void Painter::paintGame(bool *open) {
 
+std::ostream& operator<<(std::ostream& os, const Util::ImageData& img) {
+    os << "Image("
+       << img.path << ", "
+       << img.width << "x" << img.height
+       << ", channels=" << img.channels << ")";
+    return os;
+}
+
+void Painter::paintGame(bool *open) {
+    std::filesystem::path projectRoot = std::filesystem::current_path().parent_path();
+    auto hangulPath = projectRoot / "hangul";
+
+    hangulImages = Util::load_images(hangulPath.string());
+
+    for (const auto& imageData : hangulImages) {
+        std::cout << imageData << std::endl;
+    }
 }
 
 

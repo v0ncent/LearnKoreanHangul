@@ -1,8 +1,13 @@
 #ifndef PAINTER_H
 #define PAINTER_H
 
+#include <vector>
+#include "Util.h"
+
 class Painter {
     public:
+        static inline std::vector<Util::ImageData> hangulImages = std::vector<Util::ImageData>();
+
         static inline bool showMenu = false;
         static inline bool showBackToMenu = false;
         static inline bool showGame = false;

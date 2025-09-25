@@ -25,13 +25,22 @@ target_include_directories(imgui PUBLIC
 target_link_libraries(imgui PUBLIC glfw)
 
 # Main executable
-add_executable(LearnKoreanHangul src/Main.cpp
+add_executable(LearnKoreanHangul
+        src/Main.cpp
         src/Painter.cpp
-        src/Painter.h)
+        src/Painter.h
+        src/util.cpp
+        src/util.h
+)
 
 # Link against GLFW, OpenGL, and ImGui
 target_link_libraries(LearnKoreanHangul PRIVATE
         glfw
         imgui
         opengl32   # for Windows
+)
+
+# Add stb include path (header-only)
+target_include_directories(LearnKoreanHangul PRIVATE
+        ${CMAKE_SOURCE_DIR}/lib/stb
 )
