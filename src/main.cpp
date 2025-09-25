@@ -5,12 +5,8 @@
 #include <iostream>
 #include <filesystem>
 
+#include "Constants.h"
 #include "Painter.h"
-
-#define WINDOW_HEIGHT 1200
-#define WINDOW_WIDTH 1200
-
-#define WINDOW_TITLE "Learn Korean Hangul!"
 
 GLFWwindow* init() {
     if (!glfwInit()) {

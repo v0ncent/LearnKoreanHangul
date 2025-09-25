@@ -31,6 +31,7 @@ add_executable(LearnKoreanHangul
         src/Painter.h
         src/util.cpp
         src/util.h
+        src/Constants.h
 )
 
 # Link against GLFW, OpenGL, and ImGui
