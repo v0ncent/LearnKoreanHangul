@@ -7,11 +7,15 @@
 
 class Painter {
     public:
-        static inline std::vector<Util::Hangul> hangulImages = std::vector<Util::Hangul>();
+        static inline std::vector<Util::Hangul> hanguls = std::vector<Util::Hangul>();
 
         static inline bool showMenu = false;
         static inline bool showBackToMenu = false;
         static inline bool showGame = false;
+
+        static inline int score = 0;
+
+        static inline Util::Hangul currentHangul = {};
 
         static void paintMainMenu(bool* open);
         static void paintBackToMenu(bool* open);

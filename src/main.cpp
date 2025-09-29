@@ -5,6 +5,8 @@
 #include <iostream>
 #include <filesystem>
 
+#include <stb_image.h>
+
 #include "Constants.h"
 #include "Painter.h"
 #include "Util.h"
@@ -49,7 +51,7 @@ int main() {
     Painter::shouldShowMenu(true);
 
     // load hangul images
-    Painter::hangulImages = Util::loadHanguls();
+    Painter::hanguls = Util::loadHanguls();
 
     // run window loop
     while (!glfwWindowShouldClose(window)) {
@@ -85,13 +87,17 @@ int main() {
         glfwSwapBuffers(window);
     }
 
-    // clean up on close
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
     glfwDestroyWindow(window);
     glfwTerminate();
+
+    // clean up on close
+    for (int i = 0; i < Painter::hanguls.size(); ++i) {
+        stbi_image_free(Painter::hanguls[i].image.data);
+    }
 
     return 0;
 }

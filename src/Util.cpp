@@ -1,11 +1,18 @@
 #include <filesystem>
 #include <iostream>
 
+#include <windows.h>
+#include <GL/gl.h>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 #include "Util.h"
+
+#include <random>
+
 #include "Constants.h"
+#include "Painter.h"
 
 Util::ImageData Util::loadImage(const std::string &path) {
     int w, h, ch;
@@ -18,6 +25,69 @@ Util::ImageData Util::loadImage(const std::string &path) {
 
     return {w, h, ch, data};
 }
+
+GLuint Util::createTextureFromImage(const ImageData &image) {
+    if (!image.data) {
+        return 0;
+    }
+
+    GLuint textureId;
+
+    glGenTextures(1, &textureId);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+
+    // upload pixels to GPU
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.width, image.height, 0, GL_RGBA,
+        GL_UNSIGNED_BYTE, image.data);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    return textureId;
+}
+
+
+Util::Hangul Util::getRandomHangul() {
+    if (Painter::hanguls.empty()) {
+        throw std::runtime_error("hanguls list is empty!");
+    }
+
+    if (shownHangul > 40) {
+        std::cout << "SHOWN ALL HANGULS!" << std::endl;
+        return {};
+    }
+
+    std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+
+    std::uniform_int_distribution<std::size_t> distribution(0, Painter::hanguls.size() - 1);
+
+    Hangul hangul = Painter::hanguls[distribution(generator)];
+
+    if (hangul.shown && shownHangul) {
+        return getRandomHangul();
+    }
+
+    // set the hangul to shown when retrieved
+    hangul.shown = true;
+    shownHangul++;
+
+    return hangul;
+}
+
+void Util::resetGame() {
+    for (int i = 0; i < Painter::hanguls.size(); i++) {
+        Painter::hanguls[i].shown = false;
+    }
+
+   Painter::score = 0;
+}
+
+void Util::initGame() {
+    Painter::currentHangul = getRandomHangul();
+}
+
 
 std::vector<Util::Hangul> Util::loadHanguls() {
     const std::filesystem::path projectRoot = std::filesystem::current_path().parent_path();

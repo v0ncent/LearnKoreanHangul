@@ -231,5 +231,11 @@
 #define STR_UI            "ui"
 #define PRON_UI           "uey (muey)"
 
+// questions
+#define NAME_QUESTION       "What is this Hangul's name?"
+#define START_PRO_QUESTION  "How is this Hangul pronounced at the start of block?"
+#define MIDDLE_PRO_QUESTION "pronounced at the middle of a block?"
+#define END_PRO_QUESTION    "pronounced at the end of a block?"
+
 #endif
 

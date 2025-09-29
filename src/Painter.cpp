@@ -1,5 +1,8 @@
 #include "Painter.h"
 #include <imgui.h>
+#include <iostream>
+#include <ostream>
+
 #include "GLFW/glfw3.h"
 
 void Painter::shouldShowMenu(const bool show) {
@@ -32,6 +35,9 @@ void Painter::paintBackToMenu(bool *open) {
     if (ImGui::Button("Back To Menu", buttonSize)) {
         shouldPaintGame(false);
         shouldShowBackToMenu(false);
+
+        Util::resetGame();
+
         shouldShowMenu(true);
     }
 
@@ -70,6 +76,9 @@ void Painter::paintMainMenu(bool* open) {
 
     if (ImGui::Button("Begin", ImVec2(200, 40))) {
         shouldShowMenu(false);
+
+        Util::initGame();
+
         shouldShowBackToMenu(true);
         shouldPaintGame(true);
     }
@@ -86,7 +95,28 @@ void Painter::paintMainMenu(bool* open) {
 }
 
 void Painter::paintGame(bool *open) {
+    ImGui::Begin("Game", open, ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
 
+    if (currentHangul.empty()) {
+        ImGui::Text("No More Hanguls!");
+        ImGui::End();
+
+        return;
+    }
+
+    const GLuint textureID = Util::createTextureFromImage(currentHangul.image);;
+
+    if (textureID == 0) {
+        std::cerr << "Failed to load texture: " << currentHangul.name << std::endl;
+        return;
+    }
+
+    ImGui::Image(textureID, ImVec2(200, 200));
+
+    ImGui::Separator();
+
+    ImGui::End();
 }
 
 
