@@ -1,7 +1,3 @@
-//
-// Created by Banks on 9/25/2025.
-//
-
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
@@ -9,6 +5,4 @@
 #define WINDOW_WIDTH 1200
 #define WINDOW_TITLE "Learn Korean Hangul!"
 
-
-
-#endif //CONSTANTS_H
+#endif

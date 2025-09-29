@@ -1,7 +1,5 @@
 #include "Painter.h"
-
 #include <imgui.h>
-
 #include "GLFW/glfw3.h"
 
 void Painter::shouldShowMenu(const bool show) {

@@ -7,6 +7,7 @@
 
 #include "Constants.h"
 #include "Painter.h"
+#include "Util.h"
 
 GLFWwindow* init() {
     if (!glfwInit()) {
@@ -48,10 +49,7 @@ int main() {
     Painter::shouldShowMenu(true);
 
     // load hangul images
-    const std::filesystem::path projectRoot = std::filesystem::current_path().parent_path();
-    const auto hangulPath = projectRoot / "hangul";
-
-    Painter::hangulImages = Util::load_images(hangulPath.string());
+    Painter::hangulImages = Util::loadHanguls();
 
     // run window loop
     while (!glfwWindowShouldClose(window)) {

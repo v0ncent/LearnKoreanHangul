@@ -29,7 +29,7 @@ add_executable(LearnKoreanHangul
         src/Main.cpp
         src/Painter.cpp
         src/Painter.h
-        src/util.cpp
+        src/Util.cpp
         src/util.h
         src/Constants.h
 )
