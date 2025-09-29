@@ -481,9 +481,5 @@ std::vector<Util::Hangul> Util::loadHanguls() {
     }
     );
 
-
-
-
-
     return hanguls;
 }
