@@ -27,7 +27,7 @@ class Util {
             std::string endPronunciation;
             bool shown;
 
-            bool empty() const {
+            [[nodiscard]] bool empty() const {
                 return name.empty() && image.data == nullptr && image.width == 0 && image.height == 0;
             }
         };

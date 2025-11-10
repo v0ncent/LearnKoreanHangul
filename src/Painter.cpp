@@ -105,15 +105,50 @@ void Painter::paintGame(bool *open) {
         return;
     }
 
-    const GLuint textureID = Util::createTextureFromImage(currentHangul.image);;
+    // the hangul image itself
+    const GLuint textureID = Util::createTextureFromImage(currentHangul.image);
+
+    const std::string name = currentHangul.name;
+    const std::string startPronunciation = currentHangul.startPronunciation;
+    const std::string middlePronunciation = currentHangul.middlePronunciation;
+    const std::string endPronunciation = currentHangul.endPronunciation;
 
     if (textureID == 0) {
         std::cerr << "Failed to load texture: " << currentHangul.name << std::endl;
         return;
     }
 
-    ImGui::Image(textureID, ImVec2(200, 200));
+    if (startPronunciation.empty()) {
+        std::cerr << "Failed to load texture: " << currentHangul.name << std::endl;
+        return;
+    }
 
+    if (startPronunciation.empty()) {
+        std::cerr << "Failed to load texture: " << currentHangul.name << std::endl;
+        return;
+    }
+
+    if (startPronunciation.empty()) {
+        std::cerr << "Failed to load texture: " << currentHangul.name << std::endl;
+        return;
+    }
+
+    // render hangul data
+    currentHangul.shown = true;
+
+    ImGui::Image(textureID, ImVec2(200, 200));
+    ImGui::Separator();
+
+    ImGui::Text("Name: %s", name.c_str());
+    ImGui::Separator();
+
+    ImGui::Text("Start Pronunciation: %s", startPronunciation.c_str());
+    ImGui::Separator();
+
+    ImGui::Text("Middle Pronunciation: %s", middlePronunciation.c_str());
+    ImGui::Separator();
+
+    ImGui::Text("End Pronunciation: %s", endPronunciation.c_str());
     ImGui::Separator();
 
     ImGui::End();
