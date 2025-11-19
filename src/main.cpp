@@ -95,8 +95,8 @@ int main() {
     glfwTerminate();
 
     // clean up on close
-    for (int i = 0; i < Painter::hanguls.size(); ++i) {
-        stbi_image_free(Painter::hanguls[i].image.data);
+    for (const auto & hangul : Painter::hanguls) {
+        stbi_image_free(hangul.image.data);
     }
 
     return 0;

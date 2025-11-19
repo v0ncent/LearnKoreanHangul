@@ -35,6 +35,8 @@ class Util {
         static ImageData loadImage(const std::string& path);
         static std::vector<Hangul> loadHanguls();
         static Hangul getRandomHangul();
+        static Hangul getRandomHangulUnrestricted();
+        static void prepareQuestion();
         static void resetGame();
         static void initGame();
         static GLuint createTextureFromImage(const ImageData& image);

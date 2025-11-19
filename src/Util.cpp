@@ -48,6 +48,20 @@ GLuint Util::createTextureFromImage(const ImageData &image) {
     return textureId;
 }
 
+Util::Hangul Util::getRandomHangulUnrestricted() {
+    if (Painter::hanguls.empty()) {
+        throw std::runtime_error("hanguls list is empty!");
+    }
+
+    std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+
+    std::uniform_int_distribution<std::size_t> distribution(0, Painter::hanguls.size() - 1);
+
+    Hangul hangul = Painter::hanguls[distribution(generator)];
+
+    return hangul;
+}
+
 
 Util::Hangul Util::getRandomHangul() {
     if (Painter::hanguls.empty()) {
@@ -77,15 +91,42 @@ Util::Hangul Util::getRandomHangul() {
 }
 
 void Util::resetGame() {
-    for (int i = 0; i < Painter::hanguls.size(); i++) {
-        Painter::hanguls[i].shown = false;
+    for (auto & hangul : Painter::hanguls) {
+        hangul.shown = false;
     }
 
    Painter::score = 0;
+
+    Painter::running = false;
 }
 
 void Util::initGame() {
     Painter::currentHangul = getRandomHangul();
+    prepareQuestion();
+
+    Painter::running = true;
+}
+
+void Util::prepareQuestion() {
+    if (Painter::running) {
+        Painter::randomNames.clear();
+        Painter::randomStartPronunciations.clear();
+        Painter::randomMiddlePronunciations.clear();
+        Painter::randomEndPronunciations.clear();
+    }
+
+    // populate wrong answer choices with other hangul names
+    Painter::randomNames.push_back(getRandomHangulUnrestricted().name);
+    Painter::randomNames.push_back(getRandomHangulUnrestricted().name);
+    Painter::randomNames.push_back(getRandomHangulUnrestricted().name);
+
+    Painter::randomStartPronunciations.push_back(getRandomHangulUnrestricted().startPronunciation);
+    Painter::randomStartPronunciations.push_back(getRandomHangulUnrestricted().startPronunciation);
+    Painter::randomStartPronunciations.push_back(getRandomHangulUnrestricted().startPronunciation);
+
+    Painter::randomEndPronunciations.push_back(getRandomHangulUnrestricted().endPronunciation);
+    Painter::randomEndPronunciations.push_back(getRandomHangulUnrestricted().endPronunciation);
+    Painter::randomEndPronunciations.push_back(getRandomHangulUnrestricted().endPronunciation);
 }
 
 

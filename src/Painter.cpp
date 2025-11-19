@@ -96,7 +96,8 @@ void Painter::paintMainMenu(bool* open) {
 
 void Painter::paintGame(bool *open) {
     ImGui::Begin("Game", open, ImGuiWindowFlags_NoTitleBar |
-        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
+        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize
+        | ImGuiWindowFlags_NoMove);
 
     if (currentHangul.empty()) {
         ImGui::Text("No More Hanguls!");
@@ -138,6 +139,21 @@ void Painter::paintGame(bool *open) {
 
     ImGui::Image(textureID, ImVec2(200, 200));
     ImGui::Separator();
+
+    ImGui::Text("What is this Hangul's Name? ");
+    ImGui::Separator();
+
+    if (ImGui::Button(randomNames[0].c_str(), ImVec2(200, 40))) {
+
+    }
+
+    if (ImGui::Button(randomNames[1].c_str(), ImVec2(200, 40))) {
+
+    }
+
+    if (ImGui::Button(randomNames[2].c_str(), ImVec2(200, 40))) {
+
+    }
 
     ImGui::Text("Name: %s", name.c_str());
     ImGui::Separator();

@@ -7,11 +7,24 @@
 
 class Painter {
     public:
-        static inline std::vector<Util::Hangul> hanguls = std::vector<Util::Hangul>();
+        struct Answer {
+            std::string content;
+            bool answer;
+        };
+
+        static inline auto hanguls = std::vector<Util::Hangul>();
+
+        static inline auto randomNames = std::vector<std::string>();
+        static inline auto randomStartPronunciations = std::vector<std::string>();
+        static inline auto randomMiddlePronunciations = std::vector<std::string>();
+        static inline auto randomEndPronunciations = std::vector<std::string>();
 
         static inline bool showMenu = false;
         static inline bool showBackToMenu = false;
         static inline bool showGame = false;
+        static inline bool showOptions = false;
+
+        static inline bool running = false;
 
         static inline int score = 0;
 
