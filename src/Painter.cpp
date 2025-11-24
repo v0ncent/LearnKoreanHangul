@@ -17,6 +17,10 @@ void Painter::shouldPaintGame(const bool paint) {
     showGame = paint;
 }
 
+void Painter::shouldShowOptions(const bool show) {
+    showOptions = show;
+}
+
 void Painter::paintBackToMenu(bool *open) {
     const ImGuiViewport* viewPort = ImGui::GetMainViewport();
 
@@ -99,6 +103,10 @@ void Painter::paintGame(bool *open) {
         ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize
         | ImGuiWindowFlags_NoMove);
 
+    if (shouldPrepareQuestion) {
+        Util::prepareQuestion();
+    }
+
     if (currentHangul.empty()) {
         ImGui::Text("No More Hanguls!");
         ImGui::End();
@@ -134,38 +142,63 @@ void Painter::paintGame(bool *open) {
         return;
     }
 
-    // render hangul data
-    currentHangul.shown = true;
-
     ImGui::Image(textureID, ImVec2(200, 200));
     ImGui::Separator();
 
-    ImGui::Text("What is this Hangul's Name? ");
+    // Start a new horizontal group
+    ImGui::BeginGroup();
+    ImGui::Text("What is this Hangul's Name?");
     ImGui::Separator();
-
-    if (ImGui::Button(randomNames[0].c_str(), ImVec2(200, 40))) {
-
+    for (int i = 0; i < 4; i++) {
+        if (i > 0) ImGui::Separator(); // put buttons on the same row
+        if (ImGui::Button(nameOptions[i].c_str(), ImVec2(200, 40))) {
+            // handle click
+        }
     }
+    ImGui::EndGroup();
 
-    if (ImGui::Button(randomNames[1].c_str(), ImVec2(200, 40))) {
+    // Add horizontal spacing between groups
+    ImGui::SameLine();
+    ImGui::Dummy(ImVec2(50, 0)); // 50 pixels of empty horizontal space
+    ImGui::SameLine();
 
+    ImGui::BeginGroup();
+    ImGui::Text("What is this Hangul's Start Pronunciation?");
+    ImGui::Separator();
+    for (int i = 0; i < 4; i++) {
+        if (i > 0) ImGui::Separator(); // put buttons on the same row
+        if (ImGui::Button(startPronunciationOptions[i].c_str(), ImVec2(200, 40))) {
+            // handle click
+        }
     }
+    ImGui::EndGroup();
 
-    if (ImGui::Button(randomNames[2].c_str(), ImVec2(200, 40))) {
-
+    ImGui::BeginGroup();
+    ImGui::Text("What is this Hangul's Middle Pronunciation?");
+    ImGui::Separator();
+    for (int i = 0; i < 4; i++) {
+        if (i > 0) ImGui::Separator(); // put buttons on the same row
+        if (ImGui::Button(middlePronunciationOptions[i].c_str(), ImVec2(200, 40))) {
+            // handle click
+        }
     }
+    ImGui::EndGroup();
 
-    ImGui::Text("Name: %s", name.c_str());
-    ImGui::Separator();
+    // Add horizontal spacing between groups
+    ImGui::SameLine();
+    ImGui::Dummy(ImVec2(50, 0)); // 50 pixels of empty horizontal space
+    ImGui::SameLine();
 
-    ImGui::Text("Start Pronunciation: %s", startPronunciation.c_str());
+    ImGui::BeginGroup();
+    ImGui::Text("What is this Hangul's End Pronunciation?");
     ImGui::Separator();
-
-    ImGui::Text("Middle Pronunciation: %s", middlePronunciation.c_str());
-    ImGui::Separator();
-
-    ImGui::Text("End Pronunciation: %s", endPronunciation.c_str());
-    ImGui::Separator();
+    for (int i = 0; i < 4; i++) {
+        if (i > 0) ImGui::Separator(); // put buttons on the same row
+        if (ImGui::Button(endPronunciationsOptions[i].c_str(), ImVec2(200, 40))) {
+            // handle click
+        }
+    }
+    ImGui::EndGroup();
 
     ImGui::End();
 }

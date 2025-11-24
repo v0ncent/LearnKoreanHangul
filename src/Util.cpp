@@ -9,7 +9,9 @@
 
 #include "Util.h"
 
+#include <algorithm>
 #include <random>
+#include <unordered_set>
 
 #include "Constants.h"
 #include "Painter.h"
@@ -59,6 +61,10 @@ Util::Hangul Util::getRandomHangulUnrestricted() {
 
     Hangul hangul = Painter::hanguls[distribution(generator)];
 
+    if (Painter::currentHangul.name == hangul.name) {
+        getRandomHangulUnrestricted();
+    }
+
     return hangul;
 }
 
@@ -95,40 +101,71 @@ void Util::resetGame() {
         hangul.shown = false;
     }
 
-   Painter::score = 0;
+    Painter::nameOptions.clear();
+    Painter::startPronunciationOptions.clear();
+    Painter::middlePronunciationOptions.clear();
+    Painter::endPronunciationsOptions.clear();
 
-    Painter::running = false;
+   Painter::score = 0;
 }
 
 void Util::initGame() {
-    Painter::currentHangul = getRandomHangul();
-    prepareQuestion();
-
-    Painter::running = true;
+    Painter::shouldPrepareQuestion = true;
 }
 
 void Util::prepareQuestion() {
-    if (Painter::running) {
-        Painter::randomNames.clear();
-        Painter::randomStartPronunciations.clear();
-        Painter::randomMiddlePronunciations.clear();
-        Painter::randomEndPronunciations.clear();
-    }
+    // Get a new random Hangul for this question
+    Painter::currentHangul = getRandomHangul();
 
-    // populate wrong answer choices with other hangul names
-    Painter::randomNames.push_back(getRandomHangulUnrestricted().name);
-    Painter::randomNames.push_back(getRandomHangulUnrestricted().name);
-    Painter::randomNames.push_back(getRandomHangulUnrestricted().name);
+    // Clear old options
+    Painter::nameOptions.clear();
+    Painter::startPronunciationOptions.clear();
+    Painter::middlePronunciationOptions.clear();
+    Painter::endPronunciationsOptions.clear();
 
-    Painter::randomStartPronunciations.push_back(getRandomHangulUnrestricted().startPronunciation);
-    Painter::randomStartPronunciations.push_back(getRandomHangulUnrestricted().startPronunciation);
-    Painter::randomStartPronunciations.push_back(getRandomHangulUnrestricted().startPronunciation);
+    // Utility lambda to add unique strings
+    auto addUnique = [](std::vector<std::string>& vec, std::unordered_set<std::string>& used, const std::string& val) {
+        if (!used.count(val)) {
+            used.insert(val);
+            vec.push_back(val);
+        }
+    };
 
-    Painter::randomEndPronunciations.push_back(getRandomHangulUnrestricted().endPronunciation);
-    Painter::randomEndPronunciations.push_back(getRandomHangulUnrestricted().endPronunciation);
-    Painter::randomEndPronunciations.push_back(getRandomHangulUnrestricted().endPronunciation);
+    std::unordered_set<std::string> usedNames;
+    std::unordered_set<std::string> usedStartPron;
+    std::unordered_set<std::string> usedMiddlePron;
+    std::unordered_set<std::string> usedEndPron;
+
+    // Add correct answers first
+    addUnique(Painter::nameOptions, usedNames, Painter::currentHangul.name);
+    addUnique(Painter::startPronunciationOptions, usedStartPron, Painter::currentHangul.startPronunciation);
+    addUnique(Painter::middlePronunciationOptions, usedMiddlePron, Painter::currentHangul.middlePronunciation);
+    addUnique(Painter::endPronunciationsOptions, usedEndPron, Painter::currentHangul.endPronunciation);
+
+    // Add random options until we have 4 unique items each
+    while (Painter::nameOptions.size() < 4)
+        addUnique(Painter::nameOptions, usedNames, getRandomHangulUnrestricted().name);
+
+    while (Painter::startPronunciationOptions.size() < 4)
+        addUnique(Painter::startPronunciationOptions, usedStartPron, getRandomHangulUnrestricted().startPronunciation);
+
+    while (Painter::middlePronunciationOptions.size() < 4)
+        addUnique(Painter::middlePronunciationOptions, usedMiddlePron, getRandomHangulUnrestricted().middlePronunciation);
+
+    while (Painter::endPronunciationsOptions.size() < 4)
+        addUnique(Painter::endPronunciationsOptions, usedEndPron, getRandomHangulUnrestricted().endPronunciation);
+
+    // Shuffle each vector
+    std::random_device rd;
+    std::mt19937 rng(rd());
+
+    std::shuffle(Painter::nameOptions.begin(), Painter::nameOptions.end(), rng);
+    std::shuffle(Painter::startPronunciationOptions.begin(), Painter::startPronunciationOptions.end(), rng);
+    std::shuffle(Painter::middlePronunciationOptions.begin(), Painter::middlePronunciationOptions.end(), rng);
+    std::shuffle(Painter::endPronunciationsOptions.begin(), Painter::endPronunciationsOptions.end(), rng);
+
+    Painter::shouldPrepareQuestion = false;
 }
-
 
 std::vector<Util::Hangul> Util::loadHanguls() {
     const std::filesystem::path projectRoot = std::filesystem::current_path().parent_path();
