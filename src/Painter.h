@@ -19,6 +19,11 @@ class Painter {
         static inline auto middlePronunciationOptions = std::vector<std::string>();
         static inline auto endPronunciationsOptions = std::vector<std::string>();
 
+        static inline bool nameAnswerd = false;
+        static inline bool startPronunciationAnswerd = false;
+        static inline bool middlePronunciationAnswerd = false;
+        static inline bool endPronunciationAnswerd = false;
+
         static inline bool showMenu = false;
         static inline bool showBackToMenu = false;
         static inline bool showGame = false;

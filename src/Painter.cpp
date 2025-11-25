@@ -149,12 +149,24 @@ void Painter::paintGame(bool *open) {
     ImGui::BeginGroup();
     ImGui::Text("What is this Hangul's Name?");
     ImGui::Separator();
+
     for (int i = 0; i < 4; i++) {
         if (i > 0) ImGui::Separator(); // put buttons on the same row
+
         if (ImGui::Button(nameOptions[i].c_str(), ImVec2(200, 40))) {
-            // handle click
+
+            if (nameOptions[i] == currentHangul.name) {
+                nameAnswerd = true;
+
+                std::printf("cock1");
+
+            } else {
+                // make button appear red
+            }
+
         }
     }
+
     ImGui::EndGroup();
 
     // Add horizontal spacing between groups
@@ -165,23 +177,46 @@ void Painter::paintGame(bool *open) {
     ImGui::BeginGroup();
     ImGui::Text("What is this Hangul's Start Pronunciation?");
     ImGui::Separator();
+
     for (int i = 0; i < 4; i++) {
         if (i > 0) ImGui::Separator(); // put buttons on the same row
+
         if (ImGui::Button(startPronunciationOptions[i].c_str(), ImVec2(200, 40))) {
-            // handle click
+
+            if (startPronunciationOptions[i] == currentHangul.startPronunciation) {
+                startPronunciationAnswerd = true;
+
+                std::printf("cock2");
+
+            } else {
+                // make button appear red
+            }
+
         }
     }
+
     ImGui::EndGroup();
 
     ImGui::BeginGroup();
     ImGui::Text("What is this Hangul's Middle Pronunciation?");
     ImGui::Separator();
+
     for (int i = 0; i < 4; i++) {
         if (i > 0) ImGui::Separator(); // put buttons on the same row
+
         if (ImGui::Button(middlePronunciationOptions[i].c_str(), ImVec2(200, 40))) {
-            // handle click
+
+            if (middlePronunciationOptions[i] == currentHangul.middlePronunciation) {
+                middlePronunciationAnswerd = true;
+
+                std::printf("cock3");
+            } else {
+                // make button appear red
+            }
+
         }
     }
+
     ImGui::EndGroup();
 
     // Add horizontal spacing between groups
@@ -192,12 +227,34 @@ void Painter::paintGame(bool *open) {
     ImGui::BeginGroup();
     ImGui::Text("What is this Hangul's End Pronunciation?");
     ImGui::Separator();
+
     for (int i = 0; i < 4; i++) {
         if (i > 0) ImGui::Separator(); // put buttons on the same row
+
         if (ImGui::Button(endPronunciationsOptions[i].c_str(), ImVec2(200, 40))) {
-            // handle click
+
+            if (endPronunciationsOptions[i] == currentHangul.endPronunciation) {
+                endPronunciationAnswerd = true;
+
+                std::printf("cock4");
+            } else {
+                // make button appear red
+            }
+
         }
     }
+
+    ImGui::EndGroup();
+
+    ImGui::Separator();
+
+    ImGui::BeginGroup();
+
+    // if the questions have been answered successfully
+    if (nameAnswerd && startPronunciationAnswerd && middlePronunciationAnswerd && endPronunciationAnswerd) {
+        std::printf("YAY UR DONE!");
+    }
+
     ImGui::EndGroup();
 
     ImGui::End();
