@@ -12,6 +12,16 @@ class Painter {
             bool answer;
         };
 
+        inline static bool wrongName[4]   = { false, false, false, false };
+        inline static bool wrongStart[4]  = { false, false, false, false };
+        inline static bool wrongMiddle[4] = { false, false, false, false };
+        inline static bool wrongEnd[4]    = { false, false, false, false };
+
+        inline static bool correctName[4]   = { false, false, false, false };
+        inline static bool correctStart[4]  = { false, false, false, false };
+        inline static bool correctMiddle[4] = { false, false, false, false };
+        inline static bool correctEnd[4]    = { false, false, false, false };
+
         static inline auto hanguls = std::vector<Util::Hangul>();
 
         static inline auto nameOptions = std::vector<std::string>();

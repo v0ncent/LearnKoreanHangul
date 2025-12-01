@@ -100,8 +100,8 @@ void Painter::paintMainMenu(bool* open) {
 
 void Painter::paintGame(bool *open) {
     ImGui::Begin("Game", open, ImGuiWindowFlags_NoTitleBar |
-        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize
-        | ImGuiWindowFlags_NoMove);
+        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground |
+        ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove);
 
     if (shouldPrepareQuestion) {
         Util::prepareQuestion();
@@ -110,11 +110,9 @@ void Painter::paintGame(bool *open) {
     if (currentHangul.empty()) {
         ImGui::Text("No More Hanguls!");
         ImGui::End();
-
         return;
     }
 
-    // the hangul image itself
     const GLuint textureID = Util::createTextureFromImage(currentHangul.image);
 
     const std::string name = currentHangul.name;
@@ -122,142 +120,160 @@ void Painter::paintGame(bool *open) {
     const std::string middlePronunciation = currentHangul.middlePronunciation;
     const std::string endPronunciation = currentHangul.endPronunciation;
 
-    if (textureID == 0) {
-        std::cerr << "Failed to load texture: " << currentHangul.name << std::endl;
-        return;
-    }
-
-    if (startPronunciation.empty()) {
-        std::cerr << "Failed to load texture: " << currentHangul.name << std::endl;
-        return;
-    }
-
-    if (startPronunciation.empty()) {
-        std::cerr << "Failed to load texture: " << currentHangul.name << std::endl;
-        return;
-    }
-
-    if (startPronunciation.empty()) {
-        std::cerr << "Failed to load texture: " << currentHangul.name << std::endl;
-        return;
-    }
-
     ImGui::Image(textureID, ImVec2(200, 200));
     ImGui::Separator();
 
-    // Start a new horizontal group
+
+    // ----------------------------------------------------------
+    auto applyAnswerColor = [](const bool wrong, const bool correct) -> int {
+        int pushes = 0;
+
+        if (correct) {
+            ImGui::PushStyleColor(ImGuiCol_Button,        ImVec4(0.1f, 0.7f, 0.1f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.8f, 0.2f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive,  ImVec4(0.0f, 0.6f, 0.0f, 1.0f));
+            pushes = 3;
+        }
+        else if (wrong) {
+            ImGui::PushStyleColor(ImGuiCol_Button,        ImVec4(0.8f, 0.1f, 0.1f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive,  ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+            pushes = 3;
+        }
+
+        return pushes;
+    };
+    // ----------------------------------------------------------
+
+
+    // ---------------------- NAME BUTTONS ----------------------
     ImGui::BeginGroup();
     ImGui::Text("What is this Hangul's Name?");
     ImGui::Separator();
 
     for (int i = 0; i < 4; i++) {
-        if (i > 0) ImGui::Separator(); // put buttons on the same row
 
-        if (ImGui::Button(nameOptions[i].c_str(), ImVec2(200, 40))) {
+        if (i > 0) ImGui::Separator();
 
-            if (nameOptions[i] == currentHangul.name) {
+        int pushes = applyAnswerColor(wrongName[i], correctName[i]);
+
+        std::string id = nameOptions[i] + "##name_" + std::to_string(i);
+        if (ImGui::Button(id.c_str(), ImVec2(200, 40))) {
+
+            if (nameOptions[i] == name) {
+                correctName[i] = true;
                 nameAnswerd = true;
-
-                std::printf("cock1");
-
             } else {
-                // make button appear red
+                wrongName[i] = true;
             }
-
         }
-    }
 
+        if (pushes > 0) ImGui::PopStyleColor(pushes);
+    }
     ImGui::EndGroup();
 
-    // Add horizontal spacing between groups
+
     ImGui::SameLine();
-    ImGui::Dummy(ImVec2(50, 0)); // 50 pixels of empty horizontal space
+    ImGui::Dummy(ImVec2(50, 0));
     ImGui::SameLine();
 
+
+    // ---------------------- START BUTTONS ----------------------
     ImGui::BeginGroup();
     ImGui::Text("What is this Hangul's Start Pronunciation?");
     ImGui::Separator();
 
     for (int i = 0; i < 4; i++) {
-        if (i > 0) ImGui::Separator(); // put buttons on the same row
 
-        if (ImGui::Button(startPronunciationOptions[i].c_str(), ImVec2(200, 40))) {
+        if (i > 0) ImGui::Separator();
 
-            if (startPronunciationOptions[i] == currentHangul.startPronunciation) {
+        int pushes = applyAnswerColor(wrongStart[i], correctStart[i]);
+
+        std::string id = startPronunciationOptions[i] + "##start_" + std::to_string(i);
+        if (ImGui::Button(id.c_str(), ImVec2(200, 40))) {
+
+            if (startPronunciationOptions[i] == startPronunciation) {
+                correctStart[i] = true;
                 startPronunciationAnswerd = true;
-
-                std::printf("cock2");
-
             } else {
-                // make button appear red
+                wrongStart[i] = true;
             }
-
         }
-    }
 
+        if (pushes > 0) ImGui::PopStyleColor(pushes);
+    }
     ImGui::EndGroup();
 
+
+
+    // ---------------------- MIDDLE BUTTONS ----------------------
     ImGui::BeginGroup();
     ImGui::Text("What is this Hangul's Middle Pronunciation?");
     ImGui::Separator();
 
     for (int i = 0; i < 4; i++) {
-        if (i > 0) ImGui::Separator(); // put buttons on the same row
 
-        if (ImGui::Button(middlePronunciationOptions[i].c_str(), ImVec2(200, 40))) {
+        if (i > 0) ImGui::Separator();
 
-            if (middlePronunciationOptions[i] == currentHangul.middlePronunciation) {
+        int pushes = applyAnswerColor(wrongMiddle[i], correctMiddle[i]);
+
+        std::string id = middlePronunciationOptions[i] + "##middle_" + std::to_string(i);
+        if (ImGui::Button(id.c_str(), ImVec2(200, 40))) {
+
+            if (middlePronunciationOptions[i] == middlePronunciation) {
+                correctMiddle[i] = true;
                 middlePronunciationAnswerd = true;
-
-                std::printf("cock3");
             } else {
-                // make button appear red
+                wrongMiddle[i] = true;
             }
-
         }
-    }
 
+        if (pushes > 0) ImGui::PopStyleColor(pushes);
+    }
     ImGui::EndGroup();
 
-    // Add horizontal spacing between groups
+
     ImGui::SameLine();
-    ImGui::Dummy(ImVec2(50, 0)); // 50 pixels of empty horizontal space
+    ImGui::Dummy(ImVec2(50, 0));
     ImGui::SameLine();
 
+
+    // ---------------------- END BUTTONS ----------------------
     ImGui::BeginGroup();
     ImGui::Text("What is this Hangul's End Pronunciation?");
     ImGui::Separator();
 
     for (int i = 0; i < 4; i++) {
-        if (i > 0) ImGui::Separator(); // put buttons on the same row
 
-        if (ImGui::Button(endPronunciationsOptions[i].c_str(), ImVec2(200, 40))) {
+        if (i > 0) ImGui::Separator();
 
-            if (endPronunciationsOptions[i] == currentHangul.endPronunciation) {
+        int pushes = applyAnswerColor(wrongEnd[i], correctEnd[i]);
+
+        std::string id = endPronunciationsOptions[i] + "##end_" + std::to_string(i);
+        if (ImGui::Button(id.c_str(), ImVec2(200, 40))) {
+
+            if (endPronunciationsOptions[i] == endPronunciation) {
+                correctEnd[i] = true;
                 endPronunciationAnswerd = true;
-
-                std::printf("cock4");
             } else {
-                // make button appear red
+                wrongEnd[i] = true;
             }
-
         }
+
+        if (pushes > 0) ImGui::PopStyleColor(pushes);
     }
 
     ImGui::EndGroup();
 
-    ImGui::Separator();
 
-    ImGui::BeginGroup();
 
-    // if the questions have been answered successfully
-    if (nameAnswerd && startPronunciationAnswerd && middlePronunciationAnswerd && endPronunciationAnswerd) {
-        std::printf("YAY UR DONE!");
+    // When all 4 categories are correct → next question
+    if (nameAnswerd && startPronunciationAnswerd &&
+        middlePronunciationAnswerd && endPronunciationAnswerd) {
+
+        shouldPrepareQuestion = true;
     }
-
-    ImGui::EndGroup();
 
     ImGui::End();
 }
-
 

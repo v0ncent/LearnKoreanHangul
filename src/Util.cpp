@@ -114,6 +114,16 @@ void Util::initGame() {
 }
 
 void Util::prepareQuestion() {
+    Painter::nameAnswerd = false;
+    Painter::startPronunciationAnswerd = false;
+    Painter::middlePronunciationAnswerd = false;
+    Painter::endPronunciationAnswerd = false;
+
+    for (int i = 0; i < 4; i++) {
+        Painter::wrongName[i] = Painter::wrongStart[i] = Painter::wrongMiddle[i] = Painter::wrongEnd[i] = false;
+        Painter::correctName[i] = Painter::correctStart[i] = Painter::correctMiddle[i] = Painter::correctEnd[i] = false;
+    }
+
     // Get a new random Hangul for this question
     Painter::currentHangul = getRandomHangul();
 
