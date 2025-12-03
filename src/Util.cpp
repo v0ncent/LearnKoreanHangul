@@ -85,7 +85,7 @@ Util::Hangul Util::getRandomHangul() {
 
     Hangul hangul = Painter::hanguls[distribution(generator)];
 
-    if (hangul.shown && shownHangul) {
+    if (hangul.shown) {
         return getRandomHangul();
     }
 
@@ -113,7 +113,20 @@ void Util::initGame() {
     Painter::shouldPrepareQuestion = true;
 }
 
+void Util::delay() {
+    auto start = std::chrono::high_resolution_clock::now();
+
+    while (std::chrono::high_resolution_clock::now() - start < std::chrono::seconds(2)) {
+        // chill
+    }
+
+    Painter::shouldPrepareQuestion = true;
+}
+
 void Util::prepareQuestion() {
+    Painter::shouldPrepareQuestion = false;
+    Painter::timerRunning = false;
+
     Painter::nameAnswerd = false;
     Painter::startPronunciationAnswerd = false;
     Painter::middlePronunciationAnswerd = false;

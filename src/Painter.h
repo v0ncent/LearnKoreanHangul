@@ -41,6 +41,9 @@ class Painter {
 
         static inline bool shouldPrepareQuestion = false;
 
+        static inline bool shouldProceed = false;
+        static inline bool timerRunning = false;
+
         static inline int score = 0;
 
         static inline Util::Hangul currentHangul = {};

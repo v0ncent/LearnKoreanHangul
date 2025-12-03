@@ -1,7 +1,9 @@
 #include "Painter.h"
+
+#include <chrono>
 #include <imgui.h>
 #include <iostream>
-#include <ostream>
+#include <thread>
 
 #include "GLFW/glfw3.h"
 
@@ -123,7 +125,6 @@ void Painter::paintGame(bool *open) {
     ImGui::Image(textureID, ImVec2(200, 200));
     ImGui::Separator();
 
-
     // ----------------------------------------------------------
     auto applyAnswerColor = [](const bool wrong, const bool correct) -> int {
         int pushes = 0;
@@ -144,7 +145,6 @@ void Painter::paintGame(bool *open) {
         return pushes;
     };
     // ----------------------------------------------------------
-
 
     // ---------------------- NAME BUTTONS ----------------------
     ImGui::BeginGroup();
@@ -172,11 +172,9 @@ void Painter::paintGame(bool *open) {
     }
     ImGui::EndGroup();
 
-
     ImGui::SameLine();
     ImGui::Dummy(ImVec2(50, 0));
     ImGui::SameLine();
-
 
     // ---------------------- START BUTTONS ----------------------
     ImGui::BeginGroup();
@@ -204,8 +202,6 @@ void Painter::paintGame(bool *open) {
     }
     ImGui::EndGroup();
 
-
-
     // ---------------------- MIDDLE BUTTONS ----------------------
     ImGui::BeginGroup();
     ImGui::Text("What is this Hangul's Middle Pronunciation?");
@@ -232,11 +228,9 @@ void Painter::paintGame(bool *open) {
     }
     ImGui::EndGroup();
 
-
     ImGui::SameLine();
     ImGui::Dummy(ImVec2(50, 0));
     ImGui::SameLine();
-
 
     // ---------------------- END BUTTONS ----------------------
     ImGui::BeginGroup();
@@ -265,11 +259,28 @@ void Painter::paintGame(bool *open) {
 
     ImGui::EndGroup();
 
-
-
     // When all 4 categories are correct → next question
     if (nameAnswerd && startPronunciationAnswerd &&
         middlePronunciationAnswerd && endPronunciationAnswerd) {
+
+        if (!timerRunning) {
+            timerRunning = true;
+
+            auto t = std::thread(Util::delay);
+
+            // increase the number of shown hangul when we start timer so we only increment this up upon successful answer
+            // and not while imgui is rendering
+            Util::shownHangul++;
+
+            t.detach();
+        }
+
+        if (!shouldProceed) {
+            ImGui::Text("Correct!!!");
+
+            ImGui::End();
+            return;
+        }
 
         shouldPrepareQuestion = true;
     }
