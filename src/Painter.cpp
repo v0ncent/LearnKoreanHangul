@@ -2,7 +2,6 @@
 
 #include <chrono>
 #include <imgui.h>
-#include <iostream>
 #include <thread>
 
 #include "GLFW/glfw3.h"
