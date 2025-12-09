@@ -62,15 +62,19 @@ int main() {
         ImGui::NewFrame();
 
         if (Painter::showMenu) {
-            Painter::paintMainMenu(&Painter::showMenu);
+            Painter::paintMainMenu(nullptr);
         }
 
         if (Painter::showBackToMenu) {
-            Painter::paintBackToMenu(&Painter::showBackToMenu);
+            Painter::paintBackToMenu(nullptr);
         }
 
         if (Painter::showGame) {
-            Painter::paintGame(&Painter::showGame);
+            Painter::paintGame(nullptr);
+        }
+
+        if (Painter::showEndScreen) {
+            Painter::paintEndScreen(&Painter::showEndScreen);
         }
 
         ImGui::Render();

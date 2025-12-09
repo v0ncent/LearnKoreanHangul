@@ -106,7 +106,7 @@ void Util::resetGame() {
     Painter::middlePronunciationOptions.clear();
     Painter::endPronunciationsOptions.clear();
 
-   Painter::score = 0;
+    shownHangul = 0;
 }
 
 void Util::initGame() {
@@ -114,23 +114,33 @@ void Util::initGame() {
 }
 
 void Util::delay() {
-    auto start = std::chrono::high_resolution_clock::now();
+    const auto start = std::chrono::high_resolution_clock::now();
 
-    while (std::chrono::high_resolution_clock::now() - start < std::chrono::seconds(2)) {
+    while (std::chrono::high_resolution_clock::now() - start < std::chrono::seconds(1)) {
         // chill
     }
 
     Painter::shouldPrepareQuestion = true;
 }
 
+void Util::endDelay() {
+    const auto start = std::chrono::high_resolution_clock::now();
+
+    while (std::chrono::high_resolution_clock::now() - start < std::chrono::seconds(1)) {
+        // chill
+    }
+
+    Painter::shouldProceedToMenu = true;
+}
+
 void Util::prepareQuestion() {
     Painter::shouldPrepareQuestion = false;
     Painter::timerRunning = false;
 
-    Painter::nameAnswerd = false;
-    Painter::startPronunciationAnswerd = false;
-    Painter::middlePronunciationAnswerd = false;
-    Painter::endPronunciationAnswerd = false;
+    Painter::nameAnswered = false;
+    Painter::startPronunciationAnswered = false;
+    Painter::middlePronunciationAnswered = false;
+    Painter::endPronunciationAnswered = false;
 
     for (int i = 0; i < 4; i++) {
         Painter::wrongName[i] = Painter::wrongStart[i] = Painter::wrongMiddle[i] = Painter::wrongEnd[i] = false;

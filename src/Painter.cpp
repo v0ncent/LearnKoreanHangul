@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <imgui.h>
+#include <math.h>
 #include <thread>
 
 #include "GLFW/glfw3.h"
@@ -18,17 +19,17 @@ void Painter::shouldPaintGame(const bool paint) {
     showGame = paint;
 }
 
-void Painter::shouldShowOptions(const bool show) {
-    showOptions = show;
+void Painter::shouldShowEndScreen(const bool show) {
+    showEndScreen = show;
 }
 
 void Painter::paintBackToMenu(bool *open) {
     const ImGuiViewport* viewPort = ImGui::GetMainViewport();
 
-    ImVec2 workPosistion = viewPort -> WorkPos;
-    ImVec2 workSize = viewPort -> WorkSize;
+    const ImVec2 workPosistion = viewPort -> WorkPos;
+    const ImVec2 workSize = viewPort -> WorkSize;
 
-    constexpr ImVec2 buttonSize = ImVec2(120, 100);
+    constexpr auto buttonSize = ImVec2(120, 100);
     ImGui::SetNextWindowPos(ImVec2(workPosistion.x + workSize.x - buttonSize.x - 10, workPosistion.y + 10));
     ImGui::SetNextWindowSize(buttonSize);
 
@@ -54,7 +55,7 @@ void Painter::paintMainMenu(bool* open) {
     const ImGuiViewport* viewPort = ImGui::GetMainViewport();
 
     const ImVec2 center = viewPort -> GetCenter();
-    constexpr ImVec2 size = ImVec2(300, 200);
+    constexpr auto size = ImVec2(300, 200);
 
     ImGui::SetNextWindowPos(center, ImGuiCond_Always, ImVec2(0.5f, 0.5f));
     ImGui::SetNextWindowSize(size);
@@ -116,16 +117,11 @@ void Painter::paintGame(bool *open) {
     }
 
     if (currentHangul.empty()) {
-        const ImVec2 textSize = ImGui::CalcTextSize("No More Hanguls!");
-
-        ImGui::SetCursorPos(ImVec2(
-            (vp->Size.x - textSize.x) * 0.5f,
-            (vp->Size.y - textSize.y) * 0.5f
-        ));
-
-        ImGui::Text("No More Hanguls!");
+        shouldPaintGame(false);
 
         ImGui::End();
+
+        shouldShowEndScreen(true);
 
         return;
     }
@@ -218,7 +214,7 @@ void Painter::paintGame(bool *open) {
             if (ImGui::Button(id.c_str(), ImVec2(columnWidth, buttonHeight))) {
 
                 if (nameOptions[row] == name) {
-                    correctName[row] = true; nameAnswerd = true;
+                    correctName[row] = true; nameAnswered = true;
                 }
 
                 else wrongName[row] = true;
@@ -236,7 +232,7 @@ void Painter::paintGame(bool *open) {
             if (ImGui::Button(id.c_str(), ImVec2(columnWidth, buttonHeight))) {
 
                 if (startPronunciationOptions[row] == startPronunciation) {
-                    correctStart[row] = true; startPronunciationAnswerd = true;
+                    correctStart[row] = true; startPronunciationAnswered = true;
                 }
 
                 else wrongStart[row] = true;
@@ -254,7 +250,7 @@ void Painter::paintGame(bool *open) {
             if (ImGui::Button(id.c_str(), ImVec2(columnWidth, buttonHeight))) {
 
                 if (middlePronunciationOptions[row] == middlePronunciation) {
-                    correctMiddle[row] = true; middlePronunciationAnswerd = true;
+                    correctMiddle[row] = true; middlePronunciationAnswered = true;
                 }
 
                 else wrongMiddle[row] = true;
@@ -272,7 +268,7 @@ void Painter::paintGame(bool *open) {
             if (ImGui::Button(id.c_str(), ImVec2(columnWidth, buttonHeight))) {
 
                 if (endPronunciationsOptions[row] == endPronunciation) {
-                    correctEnd[row] = true; endPronunciationAnswerd = true;
+                    correctEnd[row] = true; endPronunciationAnswered = true;
                 }
 
                 else wrongEnd[row] = true;
@@ -285,11 +281,16 @@ void Painter::paintGame(bool *open) {
         ImGui::EndTable();
     }
 
+    nameAnswered = true;
+    startPronunciationAnswered = true;
+    middlePronunciationAnswered = true;
+    endPronunciationAnswered = true;
+
     // -----------------------------------------------------------
     // Next question logic
     // -----------------------------------------------------------
-    if (nameAnswerd && startPronunciationAnswerd &&
-        middlePronunciationAnswerd && endPronunciationAnswerd) {
+    if (nameAnswered && startPronunciationAnswered &&
+        middlePronunciationAnswered && endPronunciationAnswered) {
 
         if (!timerRunning) {
             timerRunning = true;
@@ -321,6 +322,63 @@ void Painter::paintGame(bool *open) {
 
     ImGui::End();
 }
+
+void Painter::paintEndScreen(bool *open) {
+    const ImGuiIO& io = ImGui::GetIO();
+
+    // Force this window to fill the screen
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::SetNextWindowSize(io.DisplaySize);
+
+    ImGui::Begin("Game Over!", open,
+        ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_NoMove);
+
+    if (!endTimerRunning) {
+        endTimerRunning = true;
+
+        auto t = std::thread(Util::endDelay);
+
+        t.detach();
+    }
+
+    if (!shouldProceedToMenu) {
+        const ImVec2 screen = io.DisplaySize;
+
+        constexpr float buttonH = 100.0f;
+        constexpr float spacing = 20.0f;
+
+        const float textHeight = ImGui::CalcTextSize("Game Over!").y;
+        const float contentHeight = textHeight + spacing + buttonH;
+
+        const float centerY = (screen.y - contentHeight) * 0.5f;
+        ImGui::SetCursorPosY(centerY);
+
+        const ImVec2 textSize = ImGui::CalcTextSize("Game Over!");
+        ImGui::SetCursorPosX((screen.x - textSize.x) * 0.5f);
+        ImGui::Text("Game Over!");
+
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + spacing);
+
+        ImGui::Dummy(ImVec2(0, 0));
+
+        ImGui::End();
+        return;
+    }
+
+    shouldShowEndScreen(false);
+    shouldShowBackToMenu(false);
+
+    Util::resetGame();
+
+    shouldShowMenu(true);
+
+    ImGui::End();
+}
+
+
+
 
 
 

@@ -42,6 +42,7 @@ class Util {
         static void prepareQuestion();
         static GLuint createTextureFromImage(const ImageData& image);
         static void delay();
+        static void endDelay();
 };
 
 #endif

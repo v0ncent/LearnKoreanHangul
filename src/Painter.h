@@ -29,20 +29,23 @@ class Painter {
         static inline auto middlePronunciationOptions = std::vector<std::string>();
         static inline auto endPronunciationsOptions = std::vector<std::string>();
 
-        static inline bool nameAnswerd = false;
-        static inline bool startPronunciationAnswerd = false;
-        static inline bool middlePronunciationAnswerd = false;
-        static inline bool endPronunciationAnswerd = false;
+        static inline bool nameAnswered = false;
+        static inline bool startPronunciationAnswered = false;
+        static inline bool middlePronunciationAnswered = false;
+        static inline bool endPronunciationAnswered = false;
 
         static inline bool showMenu = false;
         static inline bool showBackToMenu = false;
         static inline bool showGame = false;
-        static inline bool showOptions = false;
+        static inline bool showEndScreen = false;
 
         static inline bool shouldPrepareQuestion = false;
 
         static inline bool shouldProceed = false;
         static inline bool timerRunning = false;
+
+        static inline bool shouldProceedToMenu = false;
+        static inline bool endTimerRunning = false;
 
         static inline int score = 0;
 
@@ -51,11 +54,12 @@ class Painter {
         static void paintMainMenu(bool* open);
         static void paintBackToMenu(bool* open);
         static void paintGame(bool* open);
+        static void paintEndScreen(bool* open);
 
         static void shouldShowMenu(bool show);
         static void shouldShowBackToMenu(bool show);
         static void shouldPaintGame(bool paint);
-        static void shouldShowOptions(bool show);
+        static void shouldShowEndScreen(bool show);
 };
 
 #endif //PAINTER_H
