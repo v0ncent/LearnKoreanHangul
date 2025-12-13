@@ -2,7 +2,6 @@
 
 #include <chrono>
 #include <imgui.h>
-#include <math.h>
 #include <thread>
 
 #include "GLFW/glfw3.h"
@@ -280,11 +279,6 @@ void Painter::paintGame(bool *open) {
 
         ImGui::EndTable();
     }
-
-    nameAnswered = true;
-    startPronunciationAnswered = true;
-    middlePronunciationAnswered = true;
-    endPronunciationAnswered = true;
 
     // -----------------------------------------------------------
     // Next question logic
