@@ -3,6 +3,11 @@ project(LearnKoreanHangul)
 
 set(CMAKE_CXX_STANDARD 20)
 
+# Statically link everything on Windows
+if(WIN32)
+    set(CMAKE_EXE_LINKER_FLAGS "-static")
+endif()
+
 # Add GLFW from submodule
 add_subdirectory(lib/glfw)
 
