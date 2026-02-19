@@ -16,6 +16,21 @@
 #include "Constants.h"
 #include "Painter.h"
 
+#include <filesystem>
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+std::filesystem::path Util::getExeDir() {
+#ifdef _WIN32
+    wchar_t path[MAX_PATH];
+    GetModuleFileNameW(nullptr, path, MAX_PATH);
+    return std::filesystem::path(path).parent_path();
+#else
+    return std::filesystem::canonical("/proc/self/exe").parent_path();
+#endif
+}
+
 Util::ImageData Util::loadImage(const std::string &path) {
     int w, h, ch;
     unsigned char* data = stbi_load(path.c_str(), &w, &h, &ch, 4);
@@ -201,8 +216,7 @@ void Util::prepareQuestion() {
 }
 
 std::vector<Util::Hangul> Util::loadHanguls() {
-    const std::filesystem::path projectRoot = std::filesystem::current_path().parent_path();
-    const auto hangulPath = projectRoot / "hangul";
+    const auto hangulPath = getExeDir() / "hangul";
 
     std::vector<Hangul> hanguls;
 

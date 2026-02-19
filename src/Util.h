@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <filesystem>
 
 class Util {
     public:
@@ -32,8 +33,8 @@ class Util {
             }
         };
 
+        static std::filesystem::path getExeDir();
         static ImageData loadImage(const std::string& path);
-        static std::vector<std::string> shuffleVector(std::vector<std::string> vector);
         static std::vector<Hangul> loadHanguls();
         static Hangul getRandomHangul();
         static Hangul getRandomHangulUnrestricted();
