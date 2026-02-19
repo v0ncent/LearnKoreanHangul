@@ -50,3 +50,10 @@ target_link_libraries(LearnKoreanHangul PRIVATE
 target_include_directories(LearnKoreanHangul PRIVATE
         ${CMAKE_SOURCE_DIR}/lib/stb
 )
+
+# Copy hangul assets to build directory
+add_custom_command(TARGET LearnKoreanHangul POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/hangul
+        $<TARGET_FILE_DIR:LearnKoreanHangul>/hangul
+)
